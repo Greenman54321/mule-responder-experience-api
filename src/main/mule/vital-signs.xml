@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ehr-system-api="http://www.mulesoft.org/schema/mule/ehr-system-api" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+<mule xmlns:core="http://www.mulesoft.org/schema/mule/core"
+	xmlns:ehr-system-api="http://www.mulesoft.org/schema/mule/ehr-system-api" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns:ersapi="http://www.mulesoft.org/schema/mule/ersapi"
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ersapi http://www.mulesoft.org/schema/mule/ersapi/current/mule-ersapi.xsd
@@ -22,12 +23,13 @@ output application/json
 	source: "manual",
 	recorded: now(),
 	patientId: 1000,
-	vitals: payload
+	patientVitals: payload
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 				<ersapi:record-vitals doc:name="Record Vitals" doc:id="31febaa9-ea06-4020-b321-a6e4fb76d63c" config-ref="ERS_API_Config" />
-				<logger level="INFO" doc:name="Logger" doc:id="9ba09905-9954-44b9-845c-15b40e34b1ad" message="#[&quot;Saved emergency response vital signs: $(payload.id)&quot;]' category=&quot;reportVitals&quot;]"/>
+				
+				<logger level="INFO" doc:name="Logger" doc:id="9ba09905-9954-44b9-845c-15b40e34b1ad" message='#["Saved emergency response vital signs: $(payload.id)"]' category="reportVitals"/>
 			</route>
 			<route >
 				<ee:transform doc:name="EHR Request" doc:id="bc1d183c-0964-452b-8f09-13ed6764d692">
@@ -41,8 +43,8 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-				<ehr-system-api:create-vital-sign-by-facility-slug-id doc:name="Create vital sign by facility slug id" doc:id="2777b942-15ab-4b65-8235-60a1153c9d99" config-ref="EHR_System_API_Config" facility-slug="#[golden-gateway]" id="#[encounter]"/>
-				<logger level="INFO" doc:name="Logger" doc:id="22d04639-5fb8-44e1-bc16-8a9a0a058094" message='#["Saved EHR vital signs: $(payload.id), count $(sizeOf(payload.vitalSigns))"]'/>
+				<ehr-system-api:create-vital-sign-by-facility-slug-id doc:name="Create vital sign by facility slug id" doc:id="2777b942-15ab-4b65-8235-60a1153c9d99" config-ref="EHR_System_API_Config" facility-slug="#[vars.destination]" id="#[vars.encounter]"/>
+				<logger level="INFO" doc:name="Logger" doc:id="22d04639-5fb8-44e1-bc16-8a9a0a058094" message='#["Saved EHR vital signs: $(payload.id), count $(sizeOf(payload.vitalSigns))"]' category="reportVitals"/>
 			</route>
 		</scatter-gather>
 		<logger level="INFO" doc:name="Logger" doc:id="d1af9406-6d33-48f4-8da0-c6022d2f025f" message='#[output text/plain&#10;var emergencyResultMessage = payload."0" // message field of the event at the end of route &#10;var ehrResultMessage = payload."1" // message field of the event at the end of route &#10;var ehrCount = sizeOf(ehrResultMessage.payload.vitalSigns)&#10;---&#10;"Emergency Response ID $(emergencyResultMessage.payload.id) has total number of EHR vital signs $(ehrCount)"]'/>
