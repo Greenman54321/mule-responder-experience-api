@@ -1,4 +1,5 @@
 api:
+  id: "0"
   client: 
     id: "just_something_fague"
     secret: "just_something_fague_secret"
