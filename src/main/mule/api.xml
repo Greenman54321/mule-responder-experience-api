@@ -3,7 +3,7 @@
     <http:listener-config name="responder-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="responder-api-config" api="resource::7f564899-8d0b-4816-b5a3-552642e8cc91:responder-api:1.0.3:raml:zip:responder-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="responder-api-config" api="resource::7f564899-8d0b-4816-b5a3-552642e8cc91:responder-api:1.0.4:raml:zip:responder-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="responder-api-main">
         <http:listener config-ref="responder-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -94,6 +94,16 @@ output application/json
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="false" doc:name="On Error Propagate" doc:id="c2f2f4cd-aa71-4a22-80fa-130dc9d3b83a" type="APP:API_UNAUTHORIZED">
+				<ee:transform doc:name="Status Code 502" doc:id="6b0efa5b-d1a3-46fe-a59d-c0826c8737a4" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[502
+]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
         </error-handler>
     </flow>
     <flow name="responder-api-console">
@@ -135,5 +145,8 @@ output text/plain
     </flow>
     <flow name="post:\vehicles\(vehicleId)\emergencyResponses\(emergencyResponseId)\vital-signs:application\json:responder-api-config">
         <flow-ref doc:name="Flow Reference" doc:id="9e31a3e2-7be0-4b3f-ae6d-0deb4ed31f08" name="reportVitals" />
+        <error-handler>
+            <on-error-propagate enableNotifications="true" logException="false" doc:name="On Error Propagate" doc:id="ba7d1d12-224f-43b3-a701-0d6e6e7d7c43" type="MULE:COMPOSITE_ROUTING" />
+        </error-handler>
     </flow>
 </mule>

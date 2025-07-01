@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_95111667_b81f_41e9_b31f_f0270dfcdac5_Output_Payload = {
+  emergencyResponseId: Number, 
+  ehrId: Number, 
+  _?: Any
+}
+
