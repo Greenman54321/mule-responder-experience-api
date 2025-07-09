@@ -14,3 +14,8 @@ ehr:
   port: "9082"
   path: /api
   protocol: HTTP
+mq:
+  organizationId: "7f564899-8d0b-4816-b5a3-552642e8cc91"
+  environmentId: "46ad7518-d4d3-421c-adf5-d7c6c0532a64"
+  clientId: "f5748502d3f4425383ef57adfd027fa9"
+  

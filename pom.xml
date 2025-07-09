@@ -50,15 +50,14 @@
 						<secureProperties>
 							<anypoint.platform.client_secret>${anypoint.platform.client_secret}</anypoint.platform.client_secret>
 							<api.client.secret>${api.client.secret}</api.client.secret>
+							<mq.clientSecret>${mq.clientSecret}</mq.clientSecret>
 						</secureProperties>
-						
 						<scopeLoggingConfigurations>
-						  <scopeLoggingConfiguration>
-						    <scope>api</scope>
-						    <logLevel>DEBUG</logLevel>
-						  </scopeLoggingConfiguration>
-						</scopeLoggingConfigurations>						
-						
+							<scopeLoggingConfiguration>
+								<scope>api</scope>
+								<logLevel>DEBUG</logLevel>
+							</scopeLoggingConfiguration>
+						</scopeLoggingConfigurations>
 					</cloudhub2Deployment>
 					<classifier>mule-application</classifier>
 				</configuration>
@@ -109,6 +108,12 @@
 			<version>2.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>anypoint-mq-connector</artifactId>
+			<version>4.0.13</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 
