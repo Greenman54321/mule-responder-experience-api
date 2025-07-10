@@ -1,0 +1,11 @@
+{
+  "sampleData": {
+    "32f9835c-8193-4327-b214-0b7e2e797c8d": {
+      "vars-destination": "sample_data/defaultstringtype.dwl",
+      "payload": "sample_data/json.json",
+      "vars-callId": "sample_data/defaultnumbertype_1.dwl",
+      "vars-encounter": "sample_data/defaultstringtype_1.dwl",
+      "vars-vehicleId": "sample_data/defaultnumbertype_2.dwl"
+    }
+  }
+}

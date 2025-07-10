@@ -51,21 +51,35 @@ output application/json
 				<logger level="INFO" doc:name="Logger" doc:id="9ba09905-9954-44b9-845c-15b40e34b1ad" message='#["Saved emergency response vital signs: $(payload.id)"]' category="reportVitals" />
 			</route>
 			<route>
-				<ee:transform doc:name="EHR Request" doc:id="bc1d183c-0964-452b-8f09-13ed6764d692">
+				<!-- [STUDIO:"EHR Request"]<ee:transform doc:name="EHR Request" doc:id="bc1d183c-0964-452b-8f09-13ed6764d692">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 {
 	source: "manual",
 	vitals: payload
-}]]></ee:set-payload>
+}&#93;&#93;></ee:set-payload>
 			</ee:message>
-		</ee:transform>
-				<ehr-system-api:create-vital-sign-by-facility-slug-id doc:name="Create vital sign by facility slug id" doc:id="2777b942-15ab-4b65-8235-60a1153c9d99" config-ref="EHR_System_API_Config" facility-slug="#[vars.destination]" id="#[vars.encounter]" />
+		</ee:transform> [STUDIO] -->
+				<!-- [STUDIO:"Create vital sign by facility slug id"]<ehr-system-api:create-vital-sign-by-facility-slug-id doc:name="Create vital sign by facility slug id" doc:id="2777b942-15ab-4b65-8235-60a1153c9d99" config-ref="EHR_System_API_Config" facility-slug="#[vars.destination&#93;" id="#[vars.encounter&#93;" /> [STUDIO] -->
 				<logger level="INFO" doc:name="Logger" doc:id="22d04639-5fb8-44e1-bc16-8a9a0a058094" message='#["Saved EHR vital signs: $(payload.id), count $(sizeOf(payload.vitalSigns))"]' category="reportVitals" />
 			</route>
 				<route >
+					<ee:transform doc:name="Transform Message" doc:id="32f9835c-8193-4327-b214-0b7e2e797c8d" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{	
+	callId: vars.callId,
+	destination: vars.destination,
+	encounter: vars.encounter,
+	vehicleId: vars.vehicleId,
+		vitals: payload
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
 					<anypoint-mq:publish doc:name="vital-signs" doc:id="c828c7a5-3187-443f-9d0b-ead93a716674" config-ref="Anypoint_MQ_Config" destination="vital-signs"/>
 				</route>
 		</scatter-gather>
